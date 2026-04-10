@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from odoo import api, fields, models
 
 
@@ -32,7 +33,7 @@ class AccountMoveLine(models.Model):
         Compute the 'Previous Reading' by searching for the most recent posted invoice
         for the same partner and product, ordered by invoice date descending.
         
-        Odoo 17 Note: The domain search logic remains identical to version 16.
+        Odoo 17 Note: Removed order parameter from search to avoid the property field error.
         """
         for line in self:
             previous_reading = 0.0
@@ -49,16 +50,22 @@ class AccountMoveLine(models.Model):
                 # - Invoice is posted (validated)
                 # - Invoice date is before current invoice
                 # - Has a valid new reading (> 0)
-                previous_line = self.env['account.move.line'].search([
+                previous_lines = self.env['account.move.line'].search([
                     ('move_id.partner_id', '=', line.move_id.partner_id.id),
                     ('product_id', '=', line.product_id.id),
                     ('move_id.state', '=', 'posted'),
                     ('move_id.invoice_date', '<', current_invoice_date),
                     ('x_new_reading', '>', 0),
-                ], order='move_id.invoice_date DESC, id DESC', limit=1)
-
-                if previous_line:
-                    previous_reading = previous_line.x_new_reading
+                ])  # REMOVED: order='move_id.invoice_date DESC, id DESC', limit=1
+                
+                if previous_lines:
+                    # Sort manually in Python to get the most recent
+                    sorted_lines = sorted(
+                        previous_lines,
+                        key=lambda l: (l.move_id.invoice_date, l.id),
+                        reverse=True
+                    )
+                    previous_reading = sorted_lines[0].x_new_reading
 
             line.x_previous_reading = previous_reading
 
