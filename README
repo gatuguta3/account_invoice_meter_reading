@@ -1,0 +1,30 @@
+The below details explain how the module will be used , installed and its purpose in the accounting module 
+
+PURPOSE
+ For businesses which provide utilities to their clients eg. power , water and gas  need to track their client's consumption so that they can charge them . The below custom module can be used to provide businesses a more accurate way of billing their clients 
+
+ *
+ *
+ *
+
+PROBLEM SOLVED 
+ The below module automates the manual billing process of consumable resources thus this hastens business operations
+
+ *
+ *
+
+INSTALLATION
+ The below module is developed with the odoo 17 version. 
+  First uncompress the module
+  Copy the module to the custom addons directory you may have created or have to create
+  In the odoo interface activate developer mode , then update your app list.
+  Search for the module then click activate to install it.
+
+*
+*
+
+DEPENDENCIES
+ You should have the invoicing module installed in your odoo instance
+ 
+
+ 
